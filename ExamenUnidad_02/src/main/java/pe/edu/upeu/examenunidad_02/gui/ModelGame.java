@@ -7,6 +7,8 @@ package pe.edu.upeu.examenunidad_02.gui;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import pe.edu.upeu.examenunidad_02.dao.ResultadoDAO;
+import pe.edu.upeu.examenunidad_02.modelo.ResultadoTO;
 
 /**
  *
@@ -47,7 +49,7 @@ public class ModelGame {
                     } else {
                         turno = "X";
                     }
-                }else{
+                } else {
                     terminarJuego();
                 }
             }
@@ -132,18 +134,18 @@ public class ModelGame {
     }
 
     private void terminarJuego() {
-        if(draw){
+        if (draw) {
             JOptionPane.showMessageDialog(null, "Empate");
-        }else{
-            if(turno.equals("X")){
+        } else {
+            if (turno.equals("X")) {
                 victoriasJ1++;
                 cuadroj1.setText(String.valueOf(victoriasJ1));
-                JOptionPane.showMessageDialog(null, "Victoria del jugador 1");  
-            }else{
+                JOptionPane.showMessageDialog(null, "Victoria del jugador 1");
+            } else {
                 victoriasJ2++;
                 cuadroj2.setText(String.valueOf(victoriasJ2));
                 JOptionPane.showMessageDialog(null, "victoria del jugador 2");
-            }
+           }
         }
     }
 
@@ -157,11 +159,26 @@ public class ModelGame {
         end = false;
         draw = false;
         cantMovidas = 0;
-        for (int i = 0; i < 3; i++) {        
+        for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 tablero[i][j] = null;
                 casillas[i][j].setText("");
             }
         }
+    }
+
+    void AnularGame(JLabel[][] casillas) {
+        turno = "X";
+        end = false;
+        draw = false;
+        cantMovidas = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                tablero[i][j] = null;
+                casillas[i][j].setText("");
+                
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Partida anulada");
     }
 }

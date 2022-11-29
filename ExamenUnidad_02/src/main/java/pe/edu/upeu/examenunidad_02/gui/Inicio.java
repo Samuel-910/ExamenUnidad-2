@@ -28,21 +28,21 @@ import pe.edu.upeu.examenunidad_02.util.UtilsX;
 public class Inicio extends javax.swing.JFrame {
     
     private JLabel [][] casillas;
-    
-    
-    
+    private ModelGame model;
     ResultadoDaoI rDao;
+    static ResultadoTO uTO = new ResultadoTO();
     DefaultTableModel modelo;
     MsgBox msg;
     TableRowSorter<TableModel> trsfiltro;
     BufferedImage image;
     UtilsX obj = new UtilsX();
+   
     public Inicio() {
         initComponents();
         txtIdResultado.setVisible(false);
         txtNombrePartida.setVisible(false);
         //Titulo
-        this.setTitle("Gestionar marca");
+        this.setTitle("EVALUACION UNIDAD 2");
         //Icono
         try {
             image = ImageIO.read(obj.getFile("icono.jpg"));
@@ -58,6 +58,7 @@ public class Inicio extends javax.swing.JFrame {
         
         casillas = new JLabel[3][3];
         asignarCasillas();
+        ListarResultado();
     }
 
     
@@ -68,16 +69,15 @@ public class Inicio extends javax.swing.JFrame {
         jTable1.setAutoCreateRowSorter(true);
         modelo = (DefaultTableModel) jTable1.getModel();
         modelo.setNumRows(0);
-        Object[] ob = new Object[8];
+        Object[] ob = new Object[7];
         for (int i = 0; i < listarResultado.size(); i++) {
-            ob[0] = "Partida "+(i+1);
+            ob[0] = listarResultado.get(i).getNombrePartida();
             ob[1] = listarResultado.get(i).getIdResultado();
-            ob[2] = listarResultado.get(i).getNombrePartida();
-            ob[3] = listarResultado.get(i).getNombreJugador1();
-            ob[4] = listarResultado.get(i).getNombreJugador2();
-            ob[5] = listarResultado.get(i).getGanador();
-            ob[6] = listarResultado.get(i).getPunto();
-            ob[7] = listarResultado.get(i).getEstado();
+            ob[2] = listarResultado.get(i).getNombreJugador1();
+            ob[3] = listarResultado.get(i).getNombreJugador2();
+            ob[4] = listarResultado.get(i).getGanador();
+            ob[5] = listarResultado.get(i).getPunto();
+            ob[6] = listarResultado.get(i).getEstado();
             modelo.addRow(ob);
         }
         jTable1.setModel(modelo);
@@ -92,6 +92,7 @@ public class Inicio extends javax.swing.JFrame {
             ResultadoTO d = rDao.buscarResultado(Integer.parseInt(valor.toString()));
             txtIdResultado.setText(String.valueOf(d.getIdResultado()));
             txtJugador1.setText(d.getNombreJugador1());
+            txtJugador2.setText(d.getNombreJugador2());
         } else {
             txtNombrePartida.setVisible(false);
         }
@@ -367,11 +368,11 @@ public class Inicio extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nombre Partido ", "Nombre Jugador 1", "Nombre Jugador 2", "Nombre Ganador", "Puntuacion", "Estado"
+                "Nombre Partido ", "Id resultado", "Nombre Jugador 1", "Nombre Jugador 2", "Nombre Ganador", "Puntuacion", "Estado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -384,6 +385,11 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(1).setMinWidth(0);
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(0);
+            jTable1.getColumnModel().getColumn(1).setMaxWidth(0);
+        }
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -414,6 +420,11 @@ public class Inicio extends javax.swing.JFrame {
         });
 
         btnAnular.setText("ANULAR");
+        btnAnular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnularActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -490,12 +501,32 @@ public class Inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
-        // TODO add your handling code here:
+        int i=0;
+        uTO.setNombrePartida("Partida " + i);
+        i++;
+        uTO.setNombreJugador1(txtJugador1.getText());
+        uTO.setNombreJugador2(txtJugador2.getText());
+        uTO.setGanador("");
+        uTO.setPunto(0);
+        uTO.setEstado("Jugando");
+        
+        System.out.println(uTO);
+        System.out.println(uTO.getNombreJugador1());
+        System.out.println(uTO.getNombrePartida());
+        rDao = new ResultadoDAO();
+        
+        int dx = rDao.create(uTO);
+        uTO.setIdResultado(dx);
+        ListarResultado();
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         paintForm();
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void btnAnularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnularActionPerformed
+        
+    }//GEN-LAST:event_btnAnularActionPerformed
 
 
 
@@ -558,5 +589,7 @@ public class Inicio extends javax.swing.JFrame {
         return btnIniciar;
     }
     
-    
+     public JButton getBotonAnular(){
+        return btnAnular;
+    }
 }

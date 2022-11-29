@@ -36,7 +36,7 @@ public class ResultadoDAO implements ResultadoDaoI{
     @Override
     public int create(ResultadoTO d) {
         int rsId = 0;
-        String[] returns = {"nombre_partida"};
+        String[] returns = {"id_resultado"};
         String sql = "INSERT INTO resultados(nombre_partida,nombre_jugador1, nombre_jugador2,ganador, punto, estado) "
                 + "VALUES(?,?,?,?,?,?)";
         int i = 0;
@@ -64,7 +64,7 @@ public class ResultadoDAO implements ResultadoDaoI{
 
     @Override
     public int update(ResultadoTO d) {
-        System.out.println("actualizar d.getNombre: " + d.getNombrePartida());
+        System.out.println("actualizar d.getNombre_partida: " + d.getNombrePartida());
         int comit = 0;
         String sql = "UPDATE resultados SET "  
                 + "nombre_partida=?, " 
@@ -82,6 +82,7 @@ public class ResultadoDAO implements ResultadoDaoI{
             ps.setString(++i, d.getNombreJugador2());
             ps.setString(++i, d.getGanador());
             ps.setInt(++i, d.getPunto());
+            ps.setString(++i, d.getEstado());
             comit = ps.executeUpdate();
         } catch (SQLException ex) {
             log.log(Level.SEVERE, "update", ex);
@@ -119,7 +120,7 @@ public class ResultadoDAO implements ResultadoDaoI{
             rs = ps.executeQuery();
             while (rs.next()) {
                 ResultadoTO cli = new ResultadoTO();
-                cli.setNombrePartida(rs.getString("nombre_resultado"));
+                cli.setNombrePartida(rs.getString("nombre_partida"));
                 cli.setNombreJugador1(rs.getString("nombre_jugador1"));
                 cli.setNombreJugador2(rs.getString("nombre_jugador2"));
                 cli.setGanador(rs.getString("ganador"));

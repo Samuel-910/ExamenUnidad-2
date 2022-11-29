@@ -17,10 +17,12 @@ import javax.swing.JLabel;
  * @author USUARIO
  */
 public class ControllerGame {
+
     private Inicio view;
     private ModelGame model;
     private JLabel[][] casillas;
-    public ControllerGame(Inicio view, ModelGame model){
+
+    public ControllerGame(Inicio view, ModelGame model) {
         this.view = view;
         this.model = model;
         casillas = view.getCasillas();
@@ -29,16 +31,24 @@ public class ControllerGame {
     }
 
     private void agregarListeners() {
-         for(int i=0; i<3; i++){
-             for(int j=0; j<3; j++){
-                 agregarEventoMouse(i,j);
-             }
-         }
-         JButton botonReset = view.getBotonReset();
-         botonReset.addActionListener(new ActionListener() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                agregarEventoMouse(i, j);
+            }
+        }
+        JButton botonReset = view.getBotonReset();
+        botonReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 model.resetGame(casillas);
+            }
+        });
+        
+        JButton botonAnular = view.getBotonAnular();
+        botonAnular.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.AnularGame(casillas);
             }
         });
     }
@@ -48,7 +58,7 @@ public class ControllerGame {
         casillaActual.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                model.marcarCasilla(i,j,casillas);
+                model.marcarCasilla(i, j, casillas);
             }
         });
     }
@@ -56,6 +66,6 @@ public class ControllerGame {
     private void crearJugadores() {
         JLabel j1 = view.getVictoriasJ1();
         JLabel j2 = view.getVictoriasJ2();
-        model.setJugadores(j1,j2);
+        model.setJugadores(j1, j2);
     }
 }
