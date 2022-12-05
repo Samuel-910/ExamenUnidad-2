@@ -65,24 +65,21 @@ public class ResultadoDAO implements ResultadoDaoI{
     @Override
     public int update(ResultadoTO d) {
         System.out.println("actualizar d.getNombre_partida: " + d.getNombrePartida());
+        System.out.println(d.idResultado);
         int comit = 0;
         String sql = "UPDATE resultados SET "  
-                + "nombre_partida=?, " 
-                + "nombre_jugador1=?, "
-                + "nombre_jugador2=?, "
                 + "ganador=?, "
                 + "punto=?, "
                 + "estado=? "
-                + "WHERE nombre_partida=?";
+                + "WHERE id_resultado=?";
         int i = 0;
         try {
             ps = connection.prepareStatement(sql);
-            ps.setString(++i, d.getNombrePartida());
-            ps.setString(++i, d.getNombreJugador1());
-            ps.setString(++i, d.getNombreJugador2());
+
             ps.setString(++i, d.getGanador());
             ps.setInt(++i, d.getPunto());
             ps.setString(++i, d.getEstado());
+            ps.setInt(++i, d.getIdResultado());
             comit = ps.executeUpdate();
         } catch (SQLException ex) {
             log.log(Level.SEVERE, "update", ex);

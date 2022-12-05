@@ -48,7 +48,7 @@ public class ControllerGame {
         botonAnular.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.AnularGame(casillas);
+                model.AnularGame(casillas,view);
             }
         });
     }
@@ -58,7 +58,7 @@ public class ControllerGame {
         casillaActual.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                model.marcarCasilla(i, j, casillas);
+                model.marcarCasilla(i, j, casillas,view);
             }
         });
     }

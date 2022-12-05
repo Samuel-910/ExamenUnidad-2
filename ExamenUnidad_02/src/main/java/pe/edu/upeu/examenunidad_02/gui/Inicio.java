@@ -26,17 +26,22 @@ import pe.edu.upeu.examenunidad_02.util.UtilsX;
  * @author HP
  */
 public class Inicio extends javax.swing.JFrame {
-    
-    private JLabel [][] casillas;
-    private ModelGame model;
+
+   
     ResultadoDaoI rDao;
-    static ResultadoTO uTO = new ResultadoTO();
+    public static ResultadoTO uTO = new ResultadoTO();
     DefaultTableModel modelo;
     MsgBox msg;
     TableRowSorter<TableModel> trsfiltro;
-    BufferedImage image;
+    
     UtilsX obj = new UtilsX();
-   
+
+    
+    
+    
+    private JLabel[][] casillas;
+    BufferedImage image;
+    
     public Inicio() {
         initComponents();
         txtIdResultado.setVisible(false);
@@ -55,14 +60,12 @@ public class Inicio extends javax.swing.JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(new Dimension(screenSize.width, screenSize.height));
-        
+
         casillas = new JLabel[3][3];
         asignarCasillas();
         ListarResultado();
     }
 
-    
-        
     public void ListarResultado() {
         rDao = new ResultadoDAO();
         List<ResultadoTO> listarResultado = rDao.listarResultado();
@@ -82,7 +85,7 @@ public class Inicio extends javax.swing.JFrame {
         }
         jTable1.setModel(modelo);
     }
-    
+
     private void paintForm() {
         if (jTable1.getSelectedRow() != -1) {
             modelo = (DefaultTableModel) jTable1.getModel();
@@ -97,7 +100,7 @@ public class Inicio extends javax.swing.JFrame {
             txtNombrePartida.setVisible(false);
         }
     }
-        
+
     public void resetForm() {
         txtIdResultado.setText("");
         txtJugador1.setText("");
@@ -105,11 +108,7 @@ public class Inicio extends javax.swing.JFrame {
         txtJugador1.requestFocus();
 
     }
-    
-    
-    
-    
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -501,22 +500,19 @@ public class Inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
-        int i=0;
-        uTO.setNombrePartida("Partida " + i);
-        i++;
+
+        uTO.setNombrePartida("Partida "+ uTO.getIdResultado());
         uTO.setNombreJugador1(txtJugador1.getText());
         uTO.setNombreJugador2(txtJugador2.getText());
         uTO.setGanador("");
         uTO.setPunto(0);
         uTO.setEstado("Jugando");
-        
-        System.out.println(uTO);
-        System.out.println(uTO.getNombreJugador1());
-        System.out.println(uTO.getNombrePartida());
+
         rDao = new ResultadoDAO();
-        
+
         int dx = rDao.create(uTO);
         uTO.setIdResultado(dx);
+        lblNombre.setText(uTO.getNombreJugador1()+" (X)");
         ListarResultado();
     }//GEN-LAST:event_btnIniciarActionPerformed
 
@@ -525,9 +521,8 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btnAnularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnularActionPerformed
-        
-    }//GEN-LAST:event_btnAnularActionPerformed
 
+    }//GEN-LAST:event_btnAnularActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -556,7 +551,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JLabel lblNombre;
+    public javax.swing.JLabel lblNombre;
     private javax.swing.JLabel txtIdResultado;
     private javax.swing.JTextField txtJugador1;
     private javax.swing.JTextField txtJugador2;
@@ -576,20 +571,24 @@ public class Inicio extends javax.swing.JFrame {
         casillas[2][1] = Casilla8;
         casillas[2][2] = Casilla9;
     }
-    public JLabel[][] getCasillas(){
+
+    public JLabel[][] getCasillas() {
         return casillas;
     }
-    public JLabel getVictoriasJ1(){
+
+    public JLabel getVictoriasJ1() {
         return victoriasJ1;
     }
-    public JLabel getVictoriasJ2(){
+
+    public JLabel getVictoriasJ2() {
         return victoriasJ2;
     }
-    public JButton getBotonReset(){
+
+    public JButton getBotonReset() {
         return btnIniciar;
     }
-    
-     public JButton getBotonAnular(){
+
+    public JButton getBotonAnular() {
         return btnAnular;
     }
 }

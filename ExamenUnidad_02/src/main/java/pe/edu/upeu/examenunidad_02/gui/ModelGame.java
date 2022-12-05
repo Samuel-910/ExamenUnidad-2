@@ -8,6 +8,7 @@ package pe.edu.upeu.examenunidad_02.gui;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import pe.edu.upeu.examenunidad_02.dao.ResultadoDAO;
+import pe.edu.upeu.examenunidad_02.dao.ResultadoDaoI;
 import pe.edu.upeu.examenunidad_02.modelo.ResultadoTO;
 
 /**
@@ -36,7 +37,8 @@ public class ModelGame {
         victoriasJ2 = 0;
     }
 
-    public void marcarCasilla(int i, int j, JLabel[][] casillas) {
+    public void marcarCasilla(int i, int j, JLabel[][] casillas, Inicio view) {
+
         if (!end) {
             if (tablero[i][j] == null) {
                 tablero[i][j] = turno;
@@ -46,11 +48,16 @@ public class ModelGame {
                 if (!end) {
                     if (turno.equals("X")) {
                         turno = "O";
+                        ResultadoTO to = view.uTO;
+                        view.lblNombre.setText(to.getNombreJugador2()+" (O)");
                     } else {
                         turno = "X";
+                        ResultadoTO to = view.uTO;
+                        view.lblNombre.setText(to.getNombreJugador1()+" (X)");
                     }
                 } else {
-                    terminarJuego();
+                    terminarJuego(view);
+                    view.lblNombre.setText("");
                 }
             }
         }
@@ -133,19 +140,43 @@ public class ModelGame {
 
     }
 
-    private void terminarJuego() {
+    private void terminarJuego(Inicio view) {
         if (draw) {
+            ResultadoTO to = view.uTO;
+            System.out.println("id: " + to.getIdResultado());
+            to.setGanador("Empate");
+            to.setPunto(0);
+            to.setEstado("Finalizado");
+            ResultadoDaoI rDao = new ResultadoDAO();
+            rDao.update(to);
+            view.ListarResultado();
             JOptionPane.showMessageDialog(null, "Empate");
         } else {
             if (turno.equals("X")) {
                 victoriasJ1++;
                 cuadroj1.setText(String.valueOf(victoriasJ1));
+                ResultadoTO to = view.uTO;
+                System.out.println("id" + to.getIdResultado());
+                to.setGanador(to.getNombreJugador1());
+                to.setPunto(1);
+                to.setEstado("Finalizado");
+                ResultadoDaoI rDao = new ResultadoDAO();
+                rDao.update(to);
+                view.ListarResultado();
                 JOptionPane.showMessageDialog(null, "Victoria del jugador 1");
             } else {
                 victoriasJ2++;
                 cuadroj2.setText(String.valueOf(victoriasJ2));
+                ResultadoTO to = view.uTO;
+                System.out.println("id" + to.getIdResultado());
+                to.setGanador(to.getNombreJugador2());
+                to.setPunto(1);
+                to.setEstado("Finalizado");
+                ResultadoDaoI rDao = new ResultadoDAO();
+                rDao.update(to);
+                view.ListarResultado();
                 JOptionPane.showMessageDialog(null, "victoria del jugador 2");
-           }
+            }
         }
     }
 
@@ -167,7 +198,7 @@ public class ModelGame {
         }
     }
 
-    void AnularGame(JLabel[][] casillas) {
+    void AnularGame(JLabel[][] casillas,Inicio view) {
         turno = "X";
         end = false;
         draw = false;
@@ -176,9 +207,17 @@ public class ModelGame {
             for (int j = 0; j < 3; j++) {
                 tablero[i][j] = null;
                 casillas[i][j].setText("");
-                
+
             }
         }
+        ResultadoTO to = view.uTO;
+        System.out.println("id: " + to.getIdResultado());
+        to.setGanador("Anulado");
+        to.setPunto(0);
+        to.setEstado("Anulado");
+        ResultadoDaoI rDao = new ResultadoDAO();
+        rDao.update(to);
+        view.ListarResultado();
         JOptionPane.showMessageDialog(null, "Partida anulada");
     }
 }
